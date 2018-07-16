@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns=http://www.w3.org/1999/xhtml>
+<head>
+    <h1>这是一个变换地图图层的demo</h1>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta content=always name=referrer>
+    <title>OpenLayers 3地图示例</title>
+    <link href="../lib/ol.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../lib/ol.js" charset="utf-8"></script>
+</head>
+<body>
+<div id="map" style="width: 50%"></div>
+    <input type="radio" checked="checked" name="mapSource" onclick="switchToOpenStreetMap()" />openStreetMap地图
+    <input type="radio" name="mapSource" onclick="switchToBingMap()" />bingMap地图
+    <input type="radio" name="mapSource" onclick="switchTpStamen()"/>stamen地图
+
+    <script>
+        var openStreetMapLayer = new ol.layer.Tile({
+            source: new ol.source.OSM()
+        });
+
+        var bingMapLayer = new ol.layer.Tile({
+            source: new ol.source.BingMaps({
+                key: 'AkjzA7OhS4MIBjutL21bkAop7dc41HSE0CNTR5c6HJy8JKc7U9U9RveWJrylD3XJ',
+                imagerySet: 'Road'
+            })
+        });
+
+        var stamenLayer = new ol.layer.Tile({
+            source: new ol.source.Stamen({
+                layer: 'watercolor'
+            })
+        });
+
+       var map = new ol.Map({
+           //layers属性是一个数组，表示地图的图层是可以叠加的
+           layers: [bingMapLayer],
+           view: new ol.View({
+               center: [121.48, 31.42],
+               projection: 'EPSG:4326',
+               /**
+                * zoom是一个放大参数，参数值越大地图显示的精确度越高
+                */
+               zoom: 10,
+               maxZoom: 16,
+               minZoom: 5
+           }),
+           target: 'map'
+       })
+
+        function switchToOpenStreetMap() {
+            map.removeLayer(map.getLayers().item(0));
+            map.setLayers(openStreetMapLayer);
+        }
+
+        function switchToBingMap() {
+            map.removeLayer(map.getLayers().item(0));
+            map.setLayers(bingMapLayer);
+        }
+
+        function switchTpStamen() {
+            map.removeLayer(map.getLayers().item(0));
+            map.setLayers(stamenLayer);
+        }
+    </script>
+</body>
+</html>

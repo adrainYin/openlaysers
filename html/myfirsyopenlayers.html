@@ -1,0 +1,84 @@
+<!Doctype html>
+<html lang="en" xmlns=http://www.w3.org/1999/xhtml>
+<head>
+    <h1>这是一个地图演示的demo</h1>
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta content=always name=referrer>
+    <title>OpenLayers 3地图示例</title>
+    <link href="../lib/ol.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../lib/ol.js" charset="utf-8"></script>
+</head>
+
+<body>
+<p>地图1</p>
+<div id="map" style="width: 75%"></div>
+<p>一些操作按钮</p>
+<div id="someButton">
+    <input type="button" onclick="moveToLeft()" value="左移" />
+    <input type="button" onclick="moveToShangHai()" value="移动到上海"/>
+    <input type="button" onclick="moveToTop()" value="上移"/>
+    <input type="button" onclick="zoomIn()" value="放大"/>
+    <input type="button" onclick="fitToShangHai()" value="放大最大"/>
+</div>
+<script>
+    // 创建地图
+    var map = new ol.Map({
+        layers: [
+            new ol.layer.Tile({source: new ol.source.OSM()})
+        ],
+        view: new ol.View({
+            // 设置成都为地图中心，此处进行坐标转换， 把EPSG:4326的坐标，转换为EPSG:3857坐标，因为ol默认使用的是EPSG:3857坐标
+            //EPSG坐标是世界地图的GPS坐标,EPGS3857是互联网公司的通用坐标形式
+            center: [121.48, 31.42],
+            projection : 'EPSG:4326',
+            /**
+             * zoom是一个放大参数，参数值越大地图显示的精确度越高
+             */
+            zoom: 10,
+            maxZoom:16,
+            minZoom:5
+
+        }),
+        target: 'map'
+    });
+
+    function moveToLeft() {
+        var view = map.getView();
+        var center = view.getCenter();
+        center[0] += 5000;
+        view.setCenter(center);
+        map.render();
+    }
+
+    function moveToShangHai() {
+        var view = map.getView();
+        view.setCenter(ol.proj.transform([121.48,31.22],'EPSG:4326', 'EPSG:3857'));
+    }
+
+    function moveToTop() {
+        var view = map.getView();
+        var center = view.getCenter();
+        center[1] += 5000;
+        view.setCenter(center);
+        map.render();
+    }
+    
+    function zoomIn() {
+        var view = map.getView();
+        var zoom = view.getZoom();
+        zoom ++;
+        view.setZoom(zoom);
+
+    }
+
+    /**
+     * fit函数可以使得选定的坐标区域的显示范围直接达到给定的值
+     */
+    function fitToShangHai() {
+        map.getView().fit([121, 31, 122, 32], map.getSize());
+    }
+</script>
+</body>
+
+</html>
